@@ -1,0 +1,7 @@
+# Themes
+In neovim press SPACE+t+h to view the different themes, and my favorites were
+chadracula-evondev
+dark_horizon
+eldrith
+falcon
+hiberbee* this is my main one I use
