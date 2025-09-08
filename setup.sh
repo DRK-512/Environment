@@ -84,38 +84,39 @@ echo "PS1='\${debian_chroot:+(\$debian_chroot)}\[\e]0;\u@\h: \w\007\]\[\033[01;3
 # I use snap becuase apt is v2.10 and snap has v3.0+ and for gimp idc how long it takes to open
 sudo snap install gimp
 
-# Add Codium to apt
-wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
-    | gpg --dearmor \
-    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
-# Ubuntu 24+
-#echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\nComponents: main\nArchitectures: amd64 arm64\nSigned-by: /usr/share/keyrings/vscodium-archive-keyring.gpg' \
-#| sudo tee /etc/apt/sources.list.d/vscodium.sources
-# Ubuntu 22
-echo 'deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
-    | sudo tee /etc/apt/sources.list.d/vscodium.list
-
 # Add docker to apt
 # Fetch docker keyring to verify docker apt package version 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-# Add docker to apt so we can install it
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/docker.list
-# Clean out docker in case one exists
-sudo rm /etc/apt/sources.list.d/docker.list
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-rm get-docker.sh
+if command -v docker &> /dev/null; then
+  # Add Codium to apt
+  wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
+      | gpg --dearmor \
+      | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+  # Ubuntu 24+
+  #echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\nComponents: main\nArchitectures: amd64 arm64\nSigned-by: /usr/share/keyrings/vscodium-archive-keyring.gpg' \
+  #| sudo tee /etc/apt/sources.list.d/vscodium.sources
+  # Ubuntu 22
+  echo 'deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
+      | sudo tee /etc/apt/sources.list.d/vscodium.list
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  # Add docker to apt so we can install it
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/docker.list
+  # Clean out docker in case one exists
+  sudo rm /etc/apt/sources.list.d/docker.list
+  curl -fsSL https://get.docker.com -o get-docker.sh
+  sudo sh get-docker.sh
+  rm get-docker.sh
 
-# This adds the repo for chromium
-sudo add-apt-repository ppa:xtradeb/apps -y
+  # This adds the repo for chromium
+  sudo add-apt-repository ppa:xtradeb/apps -y
 
-# Install docker and codium
-sudo apt update
-sudo apt install docker-ce docker-compose codium chromium -y
+  # Install docker and codium
+  sudo apt update
+  sudo apt install docker-ce docker-compose codium chromium -y
 
-# Setup docker group & link to user
-sudo usermod -aG docker $USER
-newgrp docker
+  # Setup docker group & link to user
+  sudo usermod -aG docker $USER
+  newgrp docker
+fi
 
 # neovim config
 cp -r ./include/nvim ~/.config/
@@ -125,6 +126,7 @@ wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/AnonymousP
 unzip AnonymousPro.zip 
 rm -rf AnonymousPro.zip OFL.txt README.md 
 cd ../
+
 [ ! -d ~/.fonts/ ] && mkdir ~/.fonts/
 [ -d ~/.fonts/AnonymousPro ] && rm -rf ~/.fonts/AnonymousPro
 mv AnonymousPro/ ~/.fonts/
