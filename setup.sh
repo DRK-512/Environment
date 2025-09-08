@@ -59,20 +59,18 @@ sudo rm -rf nvim-linux-x86_6*
 curl https://sh.rustup.rs -sSf | sh
 
 # Add in git branch & add in rust source by default to .bashrc
-echo "
-# Git Branch
+echo '
 function git_branch {
   local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
-    if [ -x $branch ]; then 
-      echo ''
-    else 
-      echo '($branch)'
-    fi
+  if [ -x $branch ]; then
+    echo ""
+  else
+    echo "($branch)"
+  fi
 }
+' >> ~/.bashrc
 
-PS1='${debian_chroot:+($debian_chroot)}\[\e]0;\u@\h: \w\007\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[38;5;3m\]$(git_branch)\[\033[00m\]\$ '
-
-" >> ~/.bashrc
+echo "PS1='\${debian_chroot:+(\$debian_chroot)}\[\e]0;\u@\h: \w\007\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[38;5;3m\]\$(git_branch)\[\033[00m\]\$ '" >> ~/.bashrc
 
 # I use snap becuase apt is v2.10 and snap has v3.0+ and for gimp idc how long it takes to open
 sudo snap install gimp
@@ -115,15 +113,17 @@ wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/AnonymousP
 unzip AnonymousPro.zip 
 rm -rf AnonymousPro.zip OFL.txt README.md 
 cd ../
+[ ! -d ~/.fonts/ ] && mkdir ~/.fonts/
+[ -d ~/.fonts/AnonymousPro ] && rm -rf ~/.fonts/AnonymousPro
 mv AnonymousPro/ ~/.fonts/
 
 # Set the terminal color
-dconf load /org/gnome/terminal/legacy/profiles:/ < ./include/terminal-profile.dconf
-dconf write /org/gnome/terminal/legacy/profiles:/default "b1acd1cc-5182-4d8d-a863-c796e6d879b9"
+dconf load /org/gnome/ < ./include/gnome-profile.dconf
 
 # Terminal color preferences
 git clone --recursive https://github.com/andresgongora/synth-shell.git
 cd synth-shell
+git apply ../include/synth-shell-autoinstall.patch
 ./setup.sh
 cd ..
 rm -rf synth-shell
@@ -149,3 +149,4 @@ fi
 # Cleanup
 sudo apt autoremove -y
 sudo apt autoclean -y
+
