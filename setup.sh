@@ -34,7 +34,16 @@ if [[ $(uname -a | tr '[:upper:]' '[:lower:]') == *virtual* ]]; then
   sudo apt install open-vm-tools -y
 else
   sudo add-apt-repository ppa:lumas/photoqt -y
-  sudo apt install photoqt
+  sudo apt-get install photoqt \
+  libfishsound1 \
+  libid3tag0 \
+  liblo7 \
+  liblrdf0 \
+  libmad0 \
+  liboggz2 \
+  libopusfile0 \
+  libqt6xml6 -y
+
   wget https://code.soundsoftware.ac.uk/attachments/download/2878/sonic-visualiser_5.2.1_amd64.deb
   sudo dpkg -i sonic-visualiser_5.2.1_amd64.deb
   sudo rm sonic-visualiser_5.2.1_amd64.deb
