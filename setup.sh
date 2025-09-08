@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "This is meant for Ubuntu-22"
 sudo apt update -y
 sudo apt upgrade -y
