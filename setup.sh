@@ -17,8 +17,8 @@ net-tools \
 gparted \
 openssh-client \
 openssh-server \
+openssh-known-hosts \
 nmap \
-chromium-browser \
 gnome-tweaks \
 tmux \
 dbus-x11 \
@@ -97,9 +97,12 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 rm get-docker.sh
 
+# This adds the repo for chromium
+sudo add-apt-repository ppa:xtradeb/apps -y
+
 # Install docker and codium
 sudo apt update
-sudo apt install docker-ce docker-compose codium -y
+sudo apt install docker-ce docker-compose codium chromium -y
 
 # Setup docker group & link to user
 sudo usermod -aG docker $USER
