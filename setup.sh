@@ -126,6 +126,24 @@ if command -v docker &> /dev/null; then
   # Setup docker group & link to user
   sudo usermod -aG docker $USER
   newgrp docker
+else
+  # Add Codium to apt
+  wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
+      | gpg --dearmor \
+      | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+  # Ubuntu 24+
+  if [ "$VERSION_ID" = "24.04" ]; then
+    echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\nComponents: main\nArchitectures: amd64 arm64\nSigned-by: /usr/share/keyrings/vscodium-archive-keyring.gpg' \
+    | sudo tee /etc/apt/sources.list.d/vscodium.sources
+  else
+  # Ubuntu 22
+  echo 'deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
+      | sudo tee /etc/apt/sources.list.d/vscodium.list
+  fi
+  # This adds the repo for chromium
+  sudo add-apt-repository ppa:xtradeb/apps -y
+  sudo apt update
+  sudo apt install codium chromium -y
 fi
 
 # neovim config
