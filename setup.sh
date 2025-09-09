@@ -1,7 +1,11 @@
 #!/bin/bash
 
 source /etc/os-release
-echo "$VERSION_ID"
+
+if [[ "$VERSION_ID" < "20.04" ]]; then
+  echo -e "ERROR: This script will not work with your Ubuntu verison"
+  exit 1
+fi
 
 sudo apt update -y
 sudo apt upgrade -y
