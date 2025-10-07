@@ -33,6 +33,7 @@ libreoffice \
 btop \
 bat \
 gdb \
+xclip \
 fonts-powerline lm-sensors \
 apt-transport-https ca-certificates gnupg lsb-release \
 -y
@@ -158,6 +159,9 @@ cd ../
 [ ! -d ~/.fonts/ ] && mkdir ~/.fonts/
 [ -d ~/.fonts/AnonymousPro ] && rm -rf ~/.fonts/AnonymousPro
 mv AnonymousPro/ ~/.fonts/
+
+# nvim in bash will look for this incorrectly
+ln -s ~/.local/share/nvim/nvchad/base46/ ~/.local/share/nvim/base46
 
 # Set the terminal color
 dconf load /org/gnome/ < ./include/gnome-profile.dconf
