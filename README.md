@@ -7,6 +7,7 @@ This will consist of the tools I use daily:
 - Neovim configuration
 - Apt packages I utilize
 - etc.
+
 For testing purposes I have provided a Dockerfile, but it will not bring in the gnome theme since the container will not have a UI, but it will allow the user to have a feel for the shell I utilize and nvim configuration.
 
 # Deployment on Linux
