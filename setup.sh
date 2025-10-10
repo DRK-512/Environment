@@ -177,6 +177,4 @@ fi
 sudo apt autoremove -y
 sudo apt autoclean -y
 
-echo "Now Rebooting to fix configuration ..."
-sleep 3
-sudo reboot
+echo "Success, please reboot the device to complete the configuration ..."
