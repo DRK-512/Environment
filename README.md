@@ -14,7 +14,7 @@ For testing purposes I have provided a Dockerfile, but it will not bring in the 
 If you are on a linux distrobution that utilizes the apt package manager (AKA a debian based distrobution such as Ubuntu)<br>
 All you need to do is just run the setup.sh script, and once the configuration is done, the device will reboot<br>
 NOTE: I only utilize Debian distrobutions, so if you are on arch, you may need to sed all apt commands with pacman in the setup.sh script<br>
-The command would most likely look like this:
+The commands would most likely look like this:
 ```bash
 sed -i "s/apt up/pacman up/g" ./setup.sh
 sed -i "s/apt inst/pacman inst/g" ./setup.s h
@@ -23,4 +23,4 @@ That has not been tested, and I do not plan on testing it unless I cave in and g
 
 # Deployment on Windows
 If you are unfortunate enough to utilize Windows > Linux, I want to first apologize to you for utiling such a bloated operating system that is not meant for software development in any regard.<br>
-I then want to inform you that I have included a Dockerfile that will generate an Ubuntu 22.04 container so you can try out this setup, but will not have the gnome-theme I utilize<br>
+I then want to inform you that I have included a Dockerfile that will generate an Ubuntu 22.04 container so you can try out this setup, but will be missing some key features such as the gnome-theme I utilize and a few UI based apps<br>
