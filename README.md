@@ -17,7 +17,7 @@ NOTE: I only utilize Debian distrobutions, so if you are on arch, you may need t
 The commands would most likely look like this:
 ```bash
 sed -i "s/apt up/pacman up/g" ./setup.sh
-sed -i "s/apt inst/pacman inst/g" ./setup.s h
+sed -i "s/apt inst/pacman inst/g" ./setup.sh
 ```
 That has not been tested, and I do not plan on testing it unless I cave in and get arch linux
 
