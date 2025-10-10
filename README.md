@@ -14,7 +14,7 @@ For testing purposes I have provided a Dockerfile, but it will not bring in the 
 If you are on a linux distrobution that utilizes the apt package manager (AKA a debian based distrobution such as Ubuntu)<br>
 All you need to do is just run the setup.sh script, and once the configuration is done, the device will reboot<br>
 NOTE: I only utilize Debian distrobutions, so if you are on arch, you may need to sed all apt commands with pacman in the setup.sh script<br>
-- The command would most likely look like this:
+The command would most likely look like this:
 ```bash
 sed -i "s/apt up/pacman up/g" ./setup.sh
 sed -i "s/apt inst/pacman inst/g" ./setup.s h
