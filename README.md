@@ -24,3 +24,6 @@ That has not been tested, and I do not plan on testing it unless I cave in and g
 # Deployment on Windows
 If you are unfortunate enough to utilize Windows > Linux, I want to first apologize to you for utiling such a bloated operating system that is not meant for software development in any regard.<br>
 I then want to inform you that I have included a Dockerfile that will generate an Ubuntu 22.04 container so you can try out this setup, but will be missing some key features such as the gnome-theme I utilize and a few UI based apps<br>
+
+# CI/CD
+As far as CI/CD for this repository works, I did integrate tests to ensure that the script runs on the Ubuntu operating systems I mentioned, and I check if the Dockerfile builds, but I did not integrate any security or linting checks only because it is all bash scripts and a Dockerfile, so I do not really care since these are not applications one would run normally on their system
