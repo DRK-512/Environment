@@ -1,6 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 ERR="\e[31m"
 EC="\e[0m"
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo "This command will delete the most recent docker container and image you have"
+    echo "The '-a' '--all' flag will wipe all of your containers and images"
+    echo "This script will also ask if you want to wipe the docker cache or not"
+    echo ""
+    echo "Usage: $0 <-a flag or not>"
+    echo "-a , --all    Deletes all docker containers and images"
+    echo "-h, --help    Display this help message"
+    exit 0
+fi
 
 # Delete all docker data with all flag
 if [ ! -z ${1} ]; then

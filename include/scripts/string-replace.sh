@@ -1,34 +1,35 @@
-#!/bin/sh
+#!/bin/bash
 ERR="\e[31m"
 EC="\e[0m"
 
 # Function to display usage instructions
 usage() {
-  echo "Usage: $0 [-d directory] 'old_string' 'new_string'"
-  echo "  -d directory: Specify the directory to search in (default: current directory)."
-  echo "  'old_string': The string to be replaced."
-  echo "  'new_string': The string to replace with."
-  exit 1
+    echo "This script was made to replace all instances of a string in a given directory"
+    echo "Usage: $0 [-d directory] 'old_string' 'new_string'"
+    echo "  -d directory: Specify the directory to search in (default: current directory)."
+    echo "  'old_string': The string to be replaced."
+    echo "  'new_string': The string to replace with."
+    exit 1
 }
 
 # Default directory is the current directory.
 DIR="."
 
-# Parse command-line arguments
+# Parse command-line arguments (I gotta get fancy since arguments are dynamic)
 while getopts "d:" opt; do
-  case $opt in
-    d)
-      DIR="$OPTARG"
-      ;;
-    \?)
-      echo "${ERR}ERROR:Invalid option: -$OPTARG${EC}" >&2
-      usage
-      ;;
-    :)
-      echo "${ERR}ERROR:Option -$OPTARG requires an argument${EC}" >&2
-      usage
-      ;;
-  esac
+    case $opt in
+        d)
+            DIR="$OPTARG"
+            ;;
+        \?)
+            echo "${ERR}ERROR:Invalid option: -$OPTARG${EC}" >&2
+            usage
+            ;;
+        :)
+            echo "${ERR}ERROR:Option -$OPTARG requires an argument${EC}" >&2
+            usage
+            ;;
+    esac
 done
 
 # Check if the directory exists

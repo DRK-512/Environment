@@ -1,8 +1,22 @@
 diff --git a/setup.sh b/setup.sh
-index deecbe1..a70fd0e 100755
+index deecbe1..0957fc9 100755
 --- a/setup.sh
 +++ b/setup.sh
-@@ -416,21 +416,9 @@ installer()
+@@ -291,12 +291,7 @@ installScript()
+ installAll()
+ {
+ 	for script in $SCRIPTS; do
+-		local action=$(promptUser "Install ${script}? (Y/n)" "" "yYnN" "y")
+-		case "$action" in
+-			""|y|Y )	installScript install "${script}"
+-					;;
+-			*)		echo ""
+-		esac
++		installScript install "${script}"
+ 	done
+ }
+ 
+@@ -416,21 +411,9 @@ installer()
  	if [ "$#" -eq 0 ]; then
  		printHeader "Installation wizard for synth-shell"
  
