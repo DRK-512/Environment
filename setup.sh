@@ -1,76 +1,49 @@
 #!/bin/bash
-
-source /etc/os-release
-
-if [[ "$VERSION_ID" < "20.04" ]]; then
-  echo -e "ERROR: This script will not work with your Ubuntu verison"
-  exit 1
-fi
-
-sudo apt update -y
-sudo apt upgrade -y
-sudo apt dist-upgrade -y
-
-sudo apt install git \
+sudo pacman -Syu
+sudo pacman -S git \
 curl \
 wget \
 cmake \
-build-essential \
 vim \
 neovim \
-wireshark \
+wireshark-qt \
 tcpdump \
 net-tools \
 gparted \
-openssh-client \
-openssh-server \
-openssh-known-hosts \
+openssh \
 nmap \
-gnome-tweaks \
 tmux \
-dbus-x11 \
-libreoffice \
+zsh \
+libreoffice-fresh \
 btop \
 bat \
 gdb \
 xclip \
-fonts-powerline lm-sensors \
-apt-transport-https ca-certificates gnupg lsb-release \
--y
+wget \
+unzip \
+tar \
+gimp \ 
+bc \
+docker \
+lm_sensors \
+nvim \
+alsa-utils \
+pulseaudio \
+pavucontrol
 
+sudo systemctl enable docker
+cp -r ./include/nvim/ ~/.config/
+
+# photoqt and sonic visualizer have been removed
 if [[ $(uname -a | tr '[:upper:]' '[:lower:]') == *virtual* ]]; then
-  sudo apt install open-vm-tools -y
-else
-  sudo add-apt-repository ppa:lumas/photoqt -y
-  sudo apt-get install photoqt \
-  libfishsound1 \
-  libid3tag0 \
-  liblo7 \
-  liblrdf0 \
-  libmad0 \
-  liboggz2 \
-  libopusfile0 \
-  libqt6xml6 -y
-
-  wget https://code.soundsoftware.ac.uk/attachments/download/2878/sonic-visualiser_5.2.1_amd64.deb
-  sudo dpkg -i sonic-visualiser_5.2.1_amd64.deb
-  sudo rm sonic-visualiser_5.2.1_amd64.deb
+  sudo pacman -S open-vm-tools -y
 fi
 
-# Atuin can be used for better history
 # - synth-wave provides better history so you can ignore that tool and use CTRL+R
 # btop > htop > top
 # bat > cat
-# dbus-x11 so we can bring in our terminal profile
 # fonts-powerline and lm-sensors for synth-shell
-# apt-transport-https ca-certificates gnupg lsb-release required for docker
 # Not adding zellij to replace tmux, gotta look into that app first
-
-# Install latest nvim
-wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-tar -xvf nvim-linux-x86_64.tar.gz
-sudo cp -r nvim-linux-x86_64/* /usr/
-sudo rm -rf nvim-linux-x86_6*
 
 # Install cargo
 curl https://sh.rustup.rs -sSf | sh
@@ -88,44 +61,8 @@ function git_branch {
 ' >> ~/.bashrc
 
 echo "PS1='\${debian_chroot:+(\$debian_chroot)}\[\e]0;\u@\h: \w\007\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[38;5;3m\]\$(git_branch)\[\033[00m\]\$ '" >> ~/.bashrc
-
-# I use snap becuase apt is v2.10 and snap has v3.0+ and for gimp idc how long it takes to open
-sudo snap install gimp
-
-# Add docker to apt
-# Fetch docker keyring to verify docker apt package version 
-# Add Codium to apt
-wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
-    | gpg --dearmor \
-    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
-# Ubuntu 24+
-if [ "$VERSION_ID" = "24.04" ]; then
-  echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\nComponents: main\nArchitectures: amd64 arm64\nSigned-by: /usr/share/keyrings/vscodium-archive-keyring.gpg' \
-  | sudo tee /etc/apt/sources.list.d/vscodium.sources
-else
-# Ubuntu 22
-echo 'deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
-    | sudo tee /etc/apt/sources.list.d/vscodium.list
-fi
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-# Add docker to apt so we can install it
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/docker.list
-# Clean out docker in case one exists
-sudo rm /etc/apt/sources.list.d/docker.list
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-rm get-docker.sh
-
+# install docker and chromium
 # This adds the repo for chromium
-sudo add-apt-repository ppa:xtradeb/apps -y
-
-# Install docker and codium
-sudo apt update
-sudo apt install docker-ce docker-compose codium chromium -y
-
-# Setup docker group & link to user
-sudo usermod -aG docker $USER
-newgrp docker
 
 # neovim config
 cp -r ./include/nvim ~/.config/
@@ -141,10 +78,7 @@ cd ../
 mv AnonymousPro/ ~/.fonts/
 
 # nvim in bash will look for this incorrectly
-ln -s ~/.local/share/nvim/nvchad/base46/ ~/.local/share/nvim/base46
-
-# Set the terminal color
-dconf load /org/gnome/ < ./include/gnome-profile.dconf
+#ln -s ~/.local/share/nvim/nvchad/base46/ ~/.local/share/nvim/base46
 
 # Terminal color preferences
 git clone --recursive https://github.com/andresgongora/synth-shell.git
@@ -172,9 +106,5 @@ if [[ $(uname -a | tr '[:upper:]' '[:lower:]') == *virtual* ]]; then
 else
   sudo rm /opt/scripts/mount-vm.sh
 fi
-
-# Cleanup
-sudo apt autoremove -y
-sudo apt autoclean -y
 
 echo "Success, please reboot the device to complete the configuration ..."
