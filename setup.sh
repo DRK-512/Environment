@@ -159,13 +159,7 @@ sudo mkdir /opt/scripts
 sudo chown -R $USER:$USER /opt/scripts
 sudo cp ./include/scripts/* /opt/scripts
 
-sudo ln -s /opt/scripts/bmake.sh          /usr/bin/bmake
-sudo ln -s /opt/scripts/check-connect.sh  /usr/bin/check-connect
-sudo ln -s /opt/scripts/cleanup.sh        /usr/bin/cleanup
-sudo ln -s /opt/scripts/del-docker.sh     /usr/bin/del-docker
-sudo ln -s /opt/scripts/grefresh.sh       /usr/bin/grefresh
-sudo ln -s /opt/scripts/string-replace.sh /usr/bin/string-replace
-sudo ln -s /opt/scripts/search-pptx.sh    /usr/bin/search-pptx
+sudo /opt/scripts/linker
 
 if [[ $(uname -a | tr '[:upper:]' '[:lower:]') == *virtual* ]]; then
   sudo ln -s /opt/scripts/mount-vm.sh /usr/bin/mount-vm

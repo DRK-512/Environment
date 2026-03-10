@@ -8,7 +8,7 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 fi
 
 sudo apt update -y
-sudo apt upgrade -u 
+sudo apt upgrade -y 
 sudo apt dist-upgrade -y
 sudo apt autoremove -y
 sudo apt autoclean -y 
