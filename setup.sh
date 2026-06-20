@@ -237,6 +237,7 @@ nvim_config() {
         [ -d ~/.fonts/AnonymousPro ] && rm -rf ~/.fonts/AnonymousPro
         mv AnonymousPro/ ~/.fonts/
         
+        [[ -d ~/.config/alacritty-old ]] && rm -rf ~/.config/alacritty-old
         [[ -d ~/.config/alacritty ]] && mv ~/.config/alacritty ~/.config/alacritty-old
         cp -r ./include/alacritty/ ~/.config/
 
