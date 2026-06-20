@@ -286,11 +286,6 @@ setup_scripts() {
         sudo chown -R "$USER":"$USER" /opt/scripts
         sudo cp ./include/scripts/* /opt/scripts
 
-        script_name=$(basename "$0")
-
-        # Check if the script name ends with .sh
-        [[ "$script_name" == *.sh ]] && log_error "This file should not start with .sh since it is not meant to be a gloabl script"
-
         SOURCE_DIR="/opt/scripts"
         DEST_DIR="/usr/local/bin"
 
@@ -319,30 +314,30 @@ setup_scripts() {
                         chmod +x "$script_file"
                 fi
 
-        # Check if symbolic link already exists
-        if [[ -L "$link_path" ]]; then
-                # Check if it points to the correct file
-                if [[ "$(readlink "$link_path")" == "$script_file" ]]; then
-                        log_info "Symbolic link already exists and is correct: $link_path -> $script_file"
+                # Check if symbolic link already exists
+                if [[ -L "$link_path" ]]; then
+                        # Check if it points to the correct file
+                        if [[ "$(readlink "$link_path")" == "$script_file" ]]; then
+                                log_info "Symbolic link already exists and is correct: $link_path -> $script_file"
+                                ((skipped_count++))
+                                continue
+                        else
+                                log_warn "Removing existing symbolic link: $link_path"
+                                rm "$link_path"
+                        fi
+                elif [[ -e "$link_path" ]]; then
+                        log_warn "File $link_path already exists and is not a symbolic link. Skipping..."
                         ((skipped_count++))
                         continue
-                else
-                        log_warn "Removing existing symbolic link: $link_path"
-                        rm "$link_path"
                 fi
-        elif [[ -e "$link_path" ]]; then
-                log_warn "File $link_path already exists and is not a symbolic link. Skipping..."
-                ((skipped_count++))
-                continue
-        fi
 
-        # Create the symbolic link
-        if sudo ln -s "$script_file" "$link_path"; then
-                log_info "Created symbolic link: $link_path -> $script_file"
-                ((created_count++))
-        else
-                log_error_no_exit "Failed to create symbolic link: $link_path"
-        fi
+                # Create the symbolic link
+                if sudo ln -s "$script_file" "$link_path"; then
+                        log_info "Created symbolic link: $link_path -> $script_file"
+                        ((created_count++))
+                else
+                        log_error_no_exit "Failed to create symbolic link: $link_path"
+                fi
 
         done < <(find "$SOURCE_DIR" -maxdepth 1 -name "*.sh" -type f -print0)
 
