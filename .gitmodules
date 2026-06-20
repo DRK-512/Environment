@@ -1,0 +1,6 @@
+[submodule "include/synth-shell"]
+	path = include/synth-shell
+	url = https://github.com/DRK-512/synth-shell.git
+[submodule "include/alacritty/themes"]
+	path = include/alacritty/themes
+	url = https://github.com/alacritty/alacritty-theme
