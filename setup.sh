@@ -375,8 +375,8 @@ main() {
         color_setup
         setup_scripts
         cleanup
-        log_success "Success! please run the following command which will reboot to complete the configuration:"
-        log_success "newgrp docker && sudo reboot"
+        log_success "Success! please run the following then reboot your machine"
+        log_success "newgrp docker"
 }
 
 main "$@"
