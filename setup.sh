@@ -223,7 +223,11 @@ nvim_config() {
         cp -r ./include/nvim-local ~/.local/share/nvim
 
         # This is the font I like to use for nvim
-        mkdir AnonymousPro/
+        if [[ -d AnonymousPro ]]; then
+                log_warning "Found AnonymousPro dir, it should not exist"
+                rm -rf AnonymousPro
+        fi
+        mkdir AnonymousPro
         (cd AnonymousPro || log_error "Failed to create AnonymousPro dir"
         wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/AnonymousPro.zip
         unzip AnonymousPro.zip 
