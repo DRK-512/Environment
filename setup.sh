@@ -237,7 +237,6 @@ nvim_config() {
         [ -d ~/.fonts/AnonymousPro ] && rm -rf ~/.fonts/AnonymousPro
         mv AnonymousPro/ ~/.fonts/
         
-        [[ -d ~/.config/alacritty-old ]] && rm -rf ~/.config/alacritty-old
         [[ -d ~/.config/alacritty ]] && mv ~/.config/alacritty ~/.config/alacritty-old
         cp -r ./include/alacritty/ ~/.config/
 
@@ -279,17 +278,82 @@ color_setup() {
 }
 
 setup_scripts() {
-        sudo mkdir /opt/scripts/
+        if [[ -d /opt/scripts ]]; then
+                log_warning "/opt/scripts already exists, skipping setup_scripts function"
+                return 0
+        fi
+        sudo mkdir /opt/scripts
+        sudo chown -R "$USER":"$USER" /opt/scripts
         sudo cp ./include/scripts/* /opt/scripts
-        sudo chown -R "$USER":"$USER" /opt/scripts/
 
-        sudo /opt/scripts/linker
+        SOURCE_DIR="/opt/scripts"
+        DEST_DIR="/usr/local/bin"
+
+        # Check if dirs
+        [[ ! -d "$SOURCE_DIR" ]] && log_error "Source directory $SOURCE_DIR does not exist!"
+        # Check if destination directory exists
+        [[ ! -d "$DEST_DIR" ]] && log_error "Destination directory $DEST_DIR does not exist!"
+
+        log_info "Creating symbolic links for .sh files from $SOURCE_DIR to $DEST_DIR..."
+
+        # Counter for created links
+        created_count=0
+        skipped_count=0
+
+        # Find all .sh files in the source directory
+        while IFS= read -r -d '' script_file; do
+                # Get the basename without the .sh extension
+                script_name=$(basename "$script_file" .sh)
+
+                # Define the symbolic link path
+                link_path="$DEST_DIR/$script_name"
+
+                # Check if the script is executable
+                if [[ ! -x "$script_file" ]]; then
+                        log_warn "$script_file is not executable. Making it executable..."
+                        chmod +x "$script_file"
+                fi
+
+                # Check if symbolic link already exists
+                if [[ -L "$link_path" ]]; then
+                        # Check if it points to the correct file
+                        if [[ "$(readlink "$link_path")" == "$script_file" ]]; then
+                                log_info "Symbolic link already exists and is correct: $link_path -> $script_file"
+                                skipped_count=$((skipped_count + 1))
+                                continue
+                        else
+                                log_warn "Removing existing symbolic link: $link_path"
+                                rm "$link_path"
+                        fi
+                elif [[ -e "$link_path" ]]; then
+                        log_warn "File $link_path already exists and is not a symbolic link. Skipping..."
+                        skipped_count=$((skipped_count + 1))
+                        continue
+                fi
+
+                # Create the symbolic link
+                if sudo ln -s "$script_file" "$link_path"; then
+                        log_info "Created symbolic link: $link_path -> $script_file"
+                        created_count=$((created_count + 1))
+                else
+                        log_error_no_exit "Failed to create symbolic link: $link_path"
+                fi
+
+        done < <(find "$SOURCE_DIR" -maxdepth 1 -name "*.sh" -type f -print0)
+
+        # Print summary
+        log_info "Summary:"
+        log_info "Created: $created_count symbolic links"
+        log_info "Skipped: $skipped_count files"
+
+        log_success "Script completed successfully!"
 
         if [[ $(uname -a | tr '[:upper:]' '[:lower:]') == *virtual* ]]; then
                 sudo ln -s /opt/scripts/mount-vm.sh /usr/bin/mount-vm
         else
                 sudo rm /opt/scripts/mount-vm.sh
         fi
+        log_success "Scripts have been created"
 }
 
 cleanup() {
