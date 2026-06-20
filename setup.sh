@@ -279,9 +279,9 @@ color_setup() {
 }
 
 setup_scripts() {
-        sudo mkdir /opt/scripts
-        sudo chown -R "$USER":"$USER" /opt/scripts
+        sudo mkdir /opt/scripts/
         sudo cp ./include/scripts/* /opt/scripts
+        sudo chown -R "$USER":"$USER" /opt/scripts/
 
         sudo /opt/scripts/linker
 
