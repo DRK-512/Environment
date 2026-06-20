@@ -30,10 +30,11 @@ config() {
         git submodule update --init --recursive
 
         # Fetch the latest updates for our system
-        sudo add-apt-repository universe -y # For newgrp command
         sudo apt update -y
         sudo apt upgrade -y
         sudo apt dist-upgrade -y
+        sudo add-apt-repository universe -y # For newgrp command
+        sudo apt update -y
         log_success "Configured system, now installing apt packages"
 }
 
