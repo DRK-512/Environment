@@ -201,6 +201,7 @@ Signed-by: /etc/apt/keyrings/docker.gpg
 EOF
 
     # Docker Engine + CLI + containerd + buildx + compose v2 plugin, plus podman & codium.
+    sudo apt-get update -y
     sudo apt-get install -y \
         docker-ce docker-ce-cli containerd.io podman \
         docker-buildx-plugin docker-compose-plugin \
